@@ -6,7 +6,8 @@ def test_category_init(category_smartphones: Category) -> None:
     """Тест корректности инициализации объекта Category"""
     assert category_smartphones.name == "Смартфоны"
     assert category_smartphones.description == "Описание категории"
-    assert len(category_smartphones.products) == 2
+    assert len(category_smartphones.products_list) == 2
+    assert category_smartphones.products.count("\n") == 2
 
 
 def test_category_counts(category_smartphones: Category) -> None:
@@ -32,3 +33,45 @@ def test_product_count_increment() -> None:
     assert cat2.name == "C2"
     assert Category.product_count == 2
     assert Category.category_count == 2
+
+
+def test_category_products_property(category_smartphones: Category) -> None:
+    """Тест геттера products, который возвращает строку"""
+    output = category_smartphones.products
+    assert "руб. Остаток:" in output
+    assert "шт." in output
+    assert len(output.strip().split("\n")) == 2
+
+
+def test_add_product_no_duplicates() -> None:
+    """Тест, что add_product не добавляет один и тот же объект дважды"""
+    Category.category_count = 0
+    Category.product_count = 0
+
+    cat = Category("Electronics", "Desc")
+    p1 = Product("Nokia", "Old", 1000.0, 10)
+
+    cat.add_product(p1)
+    cat.add_product(p1)
+
+    assert len(cat.products_list) == 1
+    assert Category.product_count == 1
+
+
+def test_products_list_getter(category_smartphones: Category) -> None:
+    """Тест геттера products_list, возвращающего список объектов"""
+    raw_list = category_smartphones.products_list
+    assert isinstance(raw_list, list)
+    assert isinstance(raw_list[0], Product)
+
+
+def test_category_init_with_products() -> None:
+    """Тест инициализации категории со списком и корректность счетчика"""
+    Category.product_count = 0
+    p1 = Product("p1", "d", 10.0, 1)
+    p2 = Product("p2", "d", 20.0, 2)
+
+    cat = Category("C", "D", [p1, p2])
+
+    assert Category.product_count == 2
+    assert len(cat.products_list) == 2
