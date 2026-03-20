@@ -1,6 +1,7 @@
 from src.category import Category
 from src.product import Product
 
+
 class ProductIterator:
     """Итератор для перебора продуктов в конкретной категории"""
 
@@ -8,7 +9,7 @@ class ProductIterator:
         self.products = category_obj.products_list
         self.index = 0
 
-    def __iter__(self):
+    def __iter__(self) -> ProductIterator:
         return self
 
     def __next__(self) -> Product:

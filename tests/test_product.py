@@ -1,8 +1,6 @@
-import pytest
-
-
 from unittest.mock import patch
 
+import pytest
 from _pytest.capture import CaptureFixture
 
 from src.product import Product
@@ -75,6 +73,6 @@ def test_products_addition(product_samsung: Product, product_iphone: Product) ->
 def test_product_add_invalid_type(product_samsung: Product) -> None:
     """Тест на ошибку при сложении продукта с объектом другого типа"""
     with pytest.raises(TypeError) as excinfo:
-        _ = product_samsung + 10
+        _ = product_samsung + 10  # type: ignore
 
     assert str(excinfo.value) == "Складывать можно только объекты класса Product"
