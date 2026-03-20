@@ -75,8 +75,6 @@ def test_products_addition(product_samsung: Product, product_iphone: Product) ->
 def test_product_add_invalid_type(product_samsung: Product) -> None:
     """Тест на ошибку при сложении продукта с объектом другого типа"""
     with pytest.raises(TypeError) as excinfo:
-        # Пытаемся сложить продукт с числом (или любым другим объектом)
         _ = product_samsung + 10
 
-        # Проверяем, что сообщение об ошибке именно то, которое мы написали
     assert str(excinfo.value) == "Складывать можно только объекты класса Product"
