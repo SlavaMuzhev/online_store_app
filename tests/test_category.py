@@ -7,7 +7,7 @@ def test_category_init(category_smartphones: Category) -> None:
     assert category_smartphones.name == "Смартфоны"
     assert category_smartphones.description == "Описание категории"
     assert len(category_smartphones.products_list) == 2
-    assert category_smartphones.products.count("\n") == 2
+    assert category_smartphones.products.count("\n") == 1
 
 
 def test_category_counts(category_smartphones: Category) -> None:
@@ -75,3 +75,19 @@ def test_category_init_with_products() -> None:
 
     assert Category.product_count == 2
     assert len(cat.products_list) == 2
+
+
+def test_category_str(category_smartphones: Category) -> None:
+    """Проверка строкового отображения категории"""
+    assert str(category_smartphones) == "Смартфоны, количество продуктов: 13 шт."
+
+
+def test_category_products_output(category_smartphones: Category) -> None:
+    """Проверка, что геттер products использует строковое представление продуктов"""
+    output = category_smartphones.products
+    expected_samsung = "Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт."
+    expected_iphone = "Iphone 15, 210000.0 руб. Остаток: 8 шт."
+
+    assert expected_samsung in output
+    assert expected_iphone in output
+    assert output.strip() == f"{expected_samsung}\n{expected_iphone}"

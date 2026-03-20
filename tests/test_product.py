@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+import pytest
 from _pytest.capture import CaptureFixture
 
 from src.product import Product
@@ -57,3 +58,21 @@ def test_new_product_update_existing(product_samsung: Product) -> None:
 
     assert updated_product.quantity == 10  # 5 + 5
     assert updated_product.price == 200000.0  # Выбрана максимальная из 180к и 200к
+
+
+def test_product_str(product_samsung: Product) -> None:
+    """Проверка строкового отображения продукта"""
+    assert str(product_samsung) == "Samsung Galaxy C23 Ultra, 180000.0 руб. Остаток: 5 шт."
+
+
+def test_products_addition(product_samsung: Product, product_iphone: Product) -> None:
+    """Проверка сложения двух продуктов (сумма стоимостей всех единиц на складе)"""
+    assert product_samsung + product_iphone == 2580000.0
+
+
+def test_product_add_invalid_type(product_samsung: Product) -> None:
+    """Тест на ошибку при сложении продукта с объектом другого типа"""
+    with pytest.raises(TypeError) as excinfo:
+        _ = product_samsung + 10  # type: ignore
+
+    assert str(excinfo.value) == "Складывать можно только объекты класса Product"

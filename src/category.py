@@ -17,6 +17,10 @@ class Category:
         Category.category_count += 1
         Category.product_count += len(self.__products) if products is not None else 0
 
+    def __str__(self) -> str:
+        total_quantity = sum(product.quantity for product in self.__products)
+        return f"{self.name}, количество продуктов: {total_quantity} шт."
+
     def add_product(self, product: Product) -> None:
         """Добавляет продукт, только если его еще нет в списке"""
         if product not in self.__products:
@@ -25,11 +29,8 @@ class Category:
 
     @property
     def products(self) -> str:
-        """Возвращает список товаров в формате: Продукт, цена руб. Остаток: n шт."""
-        result = ""
-        for product in self.__products:
-            result += f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n"
-        return result
+        """Возвращает список товаров, используя строковое отображение каждого продукта"""
+        return "\n".join(str(product) for product in self.__products)
 
     @property
     def products_list(self) -> List[Product]:
