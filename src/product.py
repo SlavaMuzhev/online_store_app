@@ -17,7 +17,7 @@ class Product:
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
     def __add__(self, other: "Product") -> float:
-        if isinstance(other, Product):
+        if type(self) is type(other):
             return (self.price * self.quantity) + (other.price * other.quantity)
         raise TypeError("Складывать можно только объекты класса Product")
 
