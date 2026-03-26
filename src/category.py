@@ -22,11 +22,13 @@ class Category:
         return f"{self.name}, количество продуктов: {total_quantity} шт."
 
     def add_product(self, product: Product) -> None:
-        """Добавляет продукт, только если его еще нет в списке"""
+        """Добавляет продукт в категорию только если это объект Product или его наследник"""
+        if not isinstance(product, Product):
+            raise TypeError("Можно добавлять только объекты класса Product или его наследников")
+
         if product not in self.__products:
             self.__products.append(product)
             Category.product_count += 1
-
     @property
     def products(self) -> str:
         """Возвращает список товаров, используя строковое отображение каждого продукта"""

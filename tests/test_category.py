@@ -1,5 +1,8 @@
+import pytest
 from src.category import Category
 from src.product import Product
+from src.smartphone import Smartphone
+from src.lawngrass import LawnGrass
 
 
 def test_category_init(category_smartphones: Category) -> None:
@@ -91,3 +94,23 @@ def test_category_products_output(category_smartphones: Category) -> None:
     assert expected_samsung in output
     assert expected_iphone in output
     assert output.strip() == f"{expected_samsung}\n{expected_iphone}"
+
+
+def test_category_add_allowed_objects() -> None:
+    """Проверка, что категория принимает и смартфоны, и траву"""
+    cat = Category("Разное", "Описание")
+    iphone = Smartphone("iPhone 15", "Gray", 210000.0, 8, 15.0, "15", 512, "Gray")
+    grass = LawnGrass("Газон", "Зеленый", 500.0, 20, "РФ", "10д", "Зеленый")
+
+    cat.add_product(iphone)
+    cat.add_product(grass)
+
+    assert len(cat.products_list) == 2
+
+
+def test_category_add_forbidden_object() -> None:
+    """Проверка, что категория НЕ принимает сторонние объекты"""
+    cat = Category("Разное", "Описание")
+    with pytest.raises(TypeError):
+        cat.add_product("Просто строка")
+
