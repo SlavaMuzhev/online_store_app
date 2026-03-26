@@ -1,6 +1,4 @@
 import pytest
-from src.lawngrass import LawnGrass
-from src.product import Product
 
 
 def test_lawngrass_init(grass_green):
