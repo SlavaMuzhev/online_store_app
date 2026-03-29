@@ -1,9 +1,10 @@
 from typing import List, Optional
 
 from src.product import Product
+from src.base_category import BaseCategory
 
 
-class Category:
+class Category(BaseCategory):
     name: str
     description: str
     __products: List[Product]
@@ -20,6 +21,11 @@ class Category:
     def __str__(self) -> str:
         total_quantity = sum(product.quantity for product in self.__products)
         return f"{self.name}, количество продуктов: {total_quantity} шт."
+
+    @property
+    def total_cost(self) -> float:
+        """Суммарная стоимость всех товаров в категории (цена * количество на складе)"""
+        return sum(product.price * product.quantity for product in self.__products)
 
     def add_product(self, product: Product) -> None:
         """Добавляет продукт в категорию только если это объект Product или его наследник"""
