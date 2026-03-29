@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class BaseProduct(ABC):
     """Абстрактный базовый класс для всех продуктов"""
 
@@ -13,5 +14,5 @@ class BaseProduct(ABC):
 
     @classmethod
     @abstractmethod
-    def new_product(cls, product_data: dict):
+    def new_product(cls, product_data: dict) -> "BaseProduct":
         pass

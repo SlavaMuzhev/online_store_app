@@ -3,6 +3,7 @@ from unittest.mock import patch
 import pytest
 from _pytest.capture import CaptureFixture
 
+from src.base_product import BaseProduct
 from src.product import Product
 
 
@@ -76,3 +77,29 @@ def test_product_add_invalid_type(product_samsung: Product) -> None:
         _ = product_samsung + 10  # type: ignore
 
     assert str(excinfo.value) == "Складывать можно только объекты класса Product"
+
+
+def test_product_inheritance(smartphone_iphone: Product, grass_green: Product) -> None:
+    """Проверка наследования от базового абстрактного класса"""
+
+    assert isinstance(smartphone_iphone, BaseProduct)
+    assert isinstance(grass_green, BaseProduct)
+
+
+def test_base_product_abstract_methods() -> None:
+    """Тестируем вызов пустых методов в абстрактном классе BaseProduct"""
+
+    class TestProduct(BaseProduct):
+        def __init__(self, name: str, description: str, price: float, quantity: int) -> None:
+            super().__init__(name, description, price, quantity)  # type: ignore[safe-super]
+
+        def __str__(self) -> str:
+            return super().__str__()  # type: ignore[safe-super]
+
+        @classmethod
+        def new_product(cls, product_data: dict) -> BaseProduct:
+            return super().new_product(product_data)
+
+    test_obj = TestProduct("n", "d", 1.0, 1)
+    test_obj.__str__()
+    TestProduct.new_product({})

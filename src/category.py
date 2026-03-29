@@ -1,7 +1,7 @@
 from typing import List, Optional
 
-from src.product import Product
 from src.base_category import BaseCategory
+from src.product import Product
 
 
 class Category(BaseCategory):
@@ -35,6 +35,7 @@ class Category(BaseCategory):
         if product not in self.__products:
             self.__products.append(product)
             Category.product_count += 1
+
     @property
     def products(self) -> str:
         """Возвращает список товаров, используя строковое отображение каждого продукта"""

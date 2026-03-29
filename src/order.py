@@ -1,5 +1,6 @@
-from src.product import Product
 from src.base_category import BaseCategory
+from src.product import Product
+
 
 class Order(BaseCategory):
     """Класс для оформления заказа на один вид товара"""

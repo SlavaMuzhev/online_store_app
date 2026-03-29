@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class BaseCategory(ABC):
     """Абстрактный класс для категорий товаров и заказов"""
 

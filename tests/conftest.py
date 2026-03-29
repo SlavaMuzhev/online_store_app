@@ -4,9 +4,9 @@ from pathlib import Path
 import pytest
 
 from src.category import Category
+from src.lawngrass import LawnGrass
 from src.product import Product
 from src.smartphone import Smartphone
-from src.lawngrass import LawnGrass
 
 
 @pytest.fixture
@@ -41,22 +41,20 @@ def temp_json_file(tmp_path: Path) -> str:
 
 
 @pytest.fixture
-def smartphone_iphone():
+def smartphone_iphone() -> Smartphone:
     return Smartphone("iPhone 15", "512GB, Gray space", 210000.0, 8, 15.0, "15", 512, "Gray")
 
+
 @pytest.fixture
-def smartphone_samsung():
+def smartphone_samsung() -> Smartphone:
     return Smartphone("Samsung Galaxy C23 Ultra", "256GB, Серый цвет", 180000.0, 5, 14.0, "C23 Ultra", 256, "Gray")
 
-@pytest.fixture
-def grass_green():
-    return LawnGrass(
-        "Газон", "Густая трава", 500.0, 20, "Россия", "10 дней", "Зеленый"
-    )
 
 @pytest.fixture
-def grass_sport():
-    return LawnGrass(
-        "Спорт-Газон", "Стойкий", 700.0, 10, "Германия", "5 дней", "Тёмно-зеленый"
-    )
+def grass_green() -> LawnGrass:
+    return LawnGrass("Газон", "Густая трава", 500.0, 20, "Россия", "10 дней", "Зеленый")
 
+
+@pytest.fixture
+def grass_sport() -> LawnGrass:
+    return LawnGrass("Спорт-Газон", "Стойкий", 700.0, 10, "Германия", "5 дней", "Тёмно-зеленый")
