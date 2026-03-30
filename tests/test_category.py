@@ -1,8 +1,9 @@
 import pytest
+
 from src.category import Category
+from src.lawngrass import LawnGrass
 from src.product import Product
 from src.smartphone import Smartphone
-from src.lawngrass import LawnGrass
 
 
 def test_category_init(category_smartphones: Category) -> None:
@@ -112,5 +113,26 @@ def test_category_add_forbidden_object() -> None:
     """Проверка, что категория НЕ принимает сторонние объекты"""
     cat = Category("Разное", "Описание")
     with pytest.raises(TypeError):
-        cat.add_product("Просто строка")
+        cat.add_product("Просто строка")  # type: ignore[arg-type]
 
+
+def test_category_total_cost(category_smartphones: Category) -> None:
+    """Тест нового свойства total_cost в категории"""
+    assert category_smartphones.total_cost == 2580000.0
+
+
+def test_base_category_abstract_methods() -> None:
+    """Тестируем вызов пустых методов в абстрактном классе BaseCategory"""
+    from src.base_category import BaseCategory
+
+    class TestCategory(BaseCategory):
+        def __str__(self) -> str:
+            return super().__str__()  # type: ignore[safe-super]
+
+        @property
+        def total_cost(self) -> float:
+            return super().total_cost  # type: ignore[safe-super]
+
+    test_obj = TestCategory()
+    test_obj.__str__()
+    _ = test_obj.total_cost
