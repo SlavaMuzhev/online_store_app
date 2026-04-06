@@ -45,3 +45,16 @@ class Category(BaseCategory):
     def products_list(self) -> List[Product]:
         """Геттер для получения самого списка объектов (для метода new_product)"""
         return self.__products
+
+    def middle_price(self) -> float:
+        """
+        Подсчитывает средний ценник всех товаров в категории.
+        Возвращает 0, если товаров нет.
+        """
+        try:
+            total_sum = sum(product.price for product in self.__products)
+            average = total_sum / len(self.__products)
+            return round(average, 2)
+        except ZeroDivisionError:
+            return 0
+
