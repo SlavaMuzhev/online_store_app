@@ -12,7 +12,7 @@ class Product(PrintMixin, BaseProduct):
 
     def __init__(self, name: str, description: str, price: float, quantity: int) -> None:
         if quantity <= 0:
-            raise ValueError("Товар с нулевым количеством не может быть добавлен")
+            raise ZeroDivisionError()
         self.name = name
         self.description = description
         self.__price = price

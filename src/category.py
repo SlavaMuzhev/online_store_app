@@ -28,13 +28,28 @@ class Category(BaseCategory):
         return sum(product.price * product.quantity for product in self.__products)
 
     def add_product(self, product: Product) -> None:
-        """Добавляет продукт в категорию только если это объект Product или его наследник"""
-        if not isinstance(product, Product):
-            raise TypeError("Можно добавлять только объекты класса Product или его наследников")
+        """
+        Добавляет продукт в категорию только если это объект Product или его наследник
+        и с обработкой исключения нулевого количества
+        """
+        try:
+            if not isinstance(product, Product):
+                raise TypeError("Можно добавлять только объекты класса Product или его наследников")
 
-        if product not in self.__products:
-            self.__products.append(product)
-            Category.product_count += 1
+            if product.quantity <= 0:
+                from src.exceptions import ZeroQuantityError
+                raise ZeroQuantityError("Товар с нулевым количеством не может быть добавлен")
+
+            if product not in self.__products:
+                self.__products.append(product)
+                Category.product_count += 1
+
+        except (ZeroQuantityError, ValueError) as e:
+            print(f"Ошибка добавления товара: {e}")
+        else:
+            print("Товар успешно добавлен")
+        finally:
+            print("Обработка добавления товара завершена")
 
     @property
     def products(self) -> str:
