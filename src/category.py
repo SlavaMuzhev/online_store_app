@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from src.base_category import BaseCategory
+from src.exceptions import ZeroQuantityError
 from src.product import Product
 
 
@@ -37,14 +38,14 @@ class Category(BaseCategory):
                 raise TypeError("Можно добавлять только объекты класса Product или его наследников")
 
             if product.quantity <= 0:
-                from src.exceptions import ZeroQuantityError
+
                 raise ZeroQuantityError("Товар с нулевым количеством не может быть добавлен")
 
             if product not in self.__products:
                 self.__products.append(product)
                 Category.product_count += 1
 
-        except (ZeroQuantityError, ValueError) as e:
+        except (ZeroQuantityError, ValueError, TypeError) as e:
             print(f"Ошибка добавления товара: {e}")
         else:
             print("Товар успешно добавлен")
@@ -72,4 +73,3 @@ class Category(BaseCategory):
             return round(average, 2)
         except ZeroDivisionError:
             return 0
-

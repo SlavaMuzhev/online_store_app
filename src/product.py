@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from src.base_product import BaseProduct
+from src.exceptions import ZeroQuantityError
 from src.print_mixin import PrintMixin
 
 
@@ -12,7 +13,8 @@ class Product(PrintMixin, BaseProduct):
 
     def __init__(self, name: str, description: str, price: float, quantity: int) -> None:
         if quantity <= 0:
-            raise ZeroDivisionError()
+            raise ZeroQuantityError()
+
         self.name = name
         self.description = description
         self.__price = price

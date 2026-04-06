@@ -109,11 +109,15 @@ def test_category_add_allowed_objects() -> None:
     assert len(cat.products_list) == 2
 
 
-def test_category_add_forbidden_object() -> None:
-    """Проверка, что категория НЕ принимает сторонние объекты"""
-    cat = Category("Разное", "Описание")
-    with pytest.raises(TypeError):
-        cat.add_product("Просто строка")  # type: ignore[arg-type]
+def test_category_add_forbidden_object(capsys, category_smartphones):
+    # Теперь ошибка не выбрасывается наружу, а обрабатывается внутри
+    category_smartphones.add_product("Not a product")
+
+    captured = capsys.readouterr()
+    # Проверяем, что в консоль вывелось сообщение об ошибке
+    assert "Ошибка добавления товара" in captured.out
+    assert "Можно добавлять только объекты класса Product" in captured.out
+    assert "Обработка добавления товара завершена" in captured.out
 
 
 def test_category_total_cost(category_smartphones: Category) -> None:
@@ -136,3 +140,44 @@ def test_base_category_abstract_methods() -> None:
     test_obj = TestCategory()
     test_obj.__str__()
     _ = test_obj.total_cost
+
+
+def test_category_middle_price(category_smartphones: Category):
+    """Тест: расчет среднего ценника (180000 + 210000) / 2 = 195000"""
+    assert category_smartphones.middle_price() == 195000.0
+
+
+def test_category_middle_price_empty():
+    """Тест: средний ценник пустой категории возвращает 0 (обработка ZeroDivisionError)"""
+    empty_category = Category("Пустая", "Описание", [])
+    assert empty_category.middle_price() == 0
+
+
+def test_add_product_success_output(capsys, category_smartphones: Category, grass_green: LawnGrass):
+    """Тест: успешное добавление товара выводит нужные сообщения (else/finally)"""
+    category_smartphones.add_product(grass_green)
+
+    captured = capsys.readouterr()
+    assert "Товар успешно добавлен" in captured.out
+    assert "Обработка добавления товара завершена" in captured.out
+
+
+def test_add_product_type_error_output(capsys, category_smartphones: Category):
+    """Тест: добавление некорректного типа (не Product) обрабатывается и выводит finally"""
+    category_smartphones.add_product("Это просто строка, не продукт")
+
+    captured = capsys.readouterr()
+    assert "Ошибка добавления товара" in captured.out
+    assert "Можно добавлять только объекты класса Product" in captured.out
+    assert "Обработка добавления товара завершена" in captured.out
+
+
+def test_add_product_zero_quantity(capsys, category_smartphones: Category):
+    product = Product("Тест", "Описание", 100.0, 1)
+    product.quantity = 0
+
+    category_smartphones.add_product(product)
+
+    captured = capsys.readouterr()
+    assert "Ошибка добавления товара" in captured.out
+    assert "Обработка добавления товара завершена" in captured.out
