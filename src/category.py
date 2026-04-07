@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from src.base_category import BaseCategory
+from src.exceptions import ZeroQuantityError
 from src.product import Product
 
 
@@ -28,13 +29,28 @@ class Category(BaseCategory):
         return sum(product.price * product.quantity for product in self.__products)
 
     def add_product(self, product: Product) -> None:
-        """Добавляет продукт в категорию только если это объект Product или его наследник"""
-        if not isinstance(product, Product):
-            raise TypeError("Можно добавлять только объекты класса Product или его наследников")
+        """
+        Добавляет продукт в категорию только если это объект Product или его наследник
+        и с обработкой исключения нулевого количества
+        """
+        try:
+            if not isinstance(product, Product):
+                raise TypeError("Можно добавлять только объекты класса Product или его наследников")
 
-        if product not in self.__products:
-            self.__products.append(product)
-            Category.product_count += 1
+            if product.quantity <= 0:
+
+                raise ZeroQuantityError("Товар с нулевым количеством не может быть добавлен")
+
+            if product not in self.__products:
+                self.__products.append(product)
+                Category.product_count += 1
+
+        except (ZeroQuantityError, ValueError, TypeError) as e:
+            print(f"Ошибка добавления товара: {e}")
+        else:
+            print("Товар успешно добавлен")
+        finally:
+            print("Обработка добавления товара завершена")
 
     @property
     def products(self) -> str:
@@ -45,3 +61,15 @@ class Category(BaseCategory):
     def products_list(self) -> List[Product]:
         """Геттер для получения самого списка объектов (для метода new_product)"""
         return self.__products
+
+    def middle_price(self) -> float:
+        """
+        Подсчитывает средний ценник всех товаров в категории.
+        Возвращает 0, если товаров нет.
+        """
+        try:
+            total_sum = sum(product.price for product in self.__products)
+            average = total_sum / len(self.__products)
+            return round(average, 2)
+        except ZeroDivisionError:
+            return 0
